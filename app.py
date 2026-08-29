@@ -145,30 +145,42 @@ try:
         c3, c4 = st.columns(2)
 
         with c3:
-            st.subheader("3. Depressão x Estresse")
-            df_amostra_3 = obter_amostra_100(df_filtrado)
+            st.subheader("3. Nível de Estresse x Depressão")
+        
+            df_amostra_3 = obter_amostra_100(df_filtrado).copy()
+        
+            # Cria as categorias de nível de estresse
+            df_amostra_3["Grupo_Estresse"] = pd.cut(
+                df_amostra_3["nivel_estresse"],
+                bins=[0, 3, 6, 10],
+                labels=["Baixo (1–3)", "Moderado (4–6)", "Alto (7–10)"],
+                include_lowest=True
+            )
+        
+            # Conta os estudantes em cada grupo de estresse e depressão
             df_g3 = (
                 df_amostra_3
-                .groupby("Depression")["nivel_estresse"]
-                .mean()
-                .reset_index()
+                .groupby(["Grupo_Estresse", "Depression"], observed=False)
+                .size()
+                .reset_index(name="Quantidade")
             )
         
             fig3 = px.bar(
                 df_g3,
-                x="Depression",
-                y="nivel_estresse",
+                x="Grupo_Estresse",
+                y="Quantidade",
                 color="Depression",
-                text="nivel_estresse",
+                barmode="group",
+                text="Quantidade",
                 color_discrete_sequence=CORES_ALTO_CONTRASTE,
                 labels={
-                    "Depression": "Sintomas Depressivos",
-                    "nivel_estresse": "Nível Médio de Estresse"
+                    "Grupo_Estresse": "Nível de Estresse",
+                    "Quantidade": "Quantidade de Estudantes",
+                    "Depression": "Depressão"
                 }
             )
         
             fig3.update_traces(
-                texttemplate="%{text:.1f}",
                 textposition="outside"
             )
         
