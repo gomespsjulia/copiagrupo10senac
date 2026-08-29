@@ -147,9 +147,10 @@ try:
         with c3:
             st.subheader("3. Nível de Estresse x Depressão")
         
-            df_amostra_3 = obter_amostra_100(df_filtrado).copy()
+            # Use todos os estudantes após os filtros
+            df_amostra_3 = df_filtrado.copy()
         
-            # Cria as categorias de nível de estresse
+            # Cria as categorias de estresse
             df_amostra_3["Grupo_Estresse"] = pd.cut(
                 df_amostra_3["nivel_estresse"],
                 bins=[0, 3, 6, 10],
@@ -157,7 +158,7 @@ try:
                 include_lowest=True
             )
         
-            # Conta os estudantes em cada grupo de estresse e depressão
+            # Conta os estudantes por grupo
             df_g3 = (
                 df_amostra_3
                 .groupby(["Grupo_Estresse", "Depression"], observed=False)
@@ -165,23 +166,35 @@ try:
                 .reset_index(name="Quantidade")
             )
         
+            # Converte para estudantes por 10.000
+            total_estudantes = len(df_amostra_3)
+        
+            df_g3["Por_10k"] = (
+                df_g3["Quantidade"] / total_estudantes * 10000
+            )
+        
             fig3 = px.bar(
                 df_g3,
                 x="Grupo_Estresse",
-                y="Quantidade",
+                y="Por_10k",
                 color="Depression",
                 barmode="group",
-                text="Quantidade",
+                text="Por_10k",
                 color_discrete_sequence=CORES_ALTO_CONTRASTE,
                 labels={
                     "Grupo_Estresse": "Nível de Estresse",
-                    "Quantidade": "Quantidade de Estudantes",
+                    "Por_10k": "Estudantes por 10.000",
                     "Depression": "Depressão"
                 }
             )
         
             fig3.update_traces(
+                texttemplate="%{text:.0f}",
                 textposition="outside"
+            )
+        
+            fig3.update_layout(
+                yaxis_title="Estudantes por 10.000"
             )
         
             st.plotly_chart(fig3, use_container_width=True)
