@@ -144,37 +144,37 @@ try:
         # --- SEGUNDA LINHA DE GRÁFICOS (3 e 4) ---
         c3, c4 = st.columns(2)
 
-with c3:
-    st.subheader("3. Depressão x Estresse")
-
-    df_amostra_3 = obter_amostra_100(df_filtrado)
-
-    df_g3 = (
-        df_amostra_3
-        .groupby("Depression")["nivel_estresse"]
-        .mean()
-        .reset_index()
-    )
-
-    fig3 = px.bar(
-        df_g3,
-        x="Depression",
-        y="nivel_estresse",
-        color="Depression",
-        text="nivel_estresse",
-        color_discrete_sequence=CORES_ALTO_CONTRASTE,
-        labels={
-            "Depression": "Sintomas Depressivos",
-            "nivel_estresse": "Nível Médio de Estresse"
-        }
-    )
-
-    fig3.update_traces(
-        texttemplate="%{text:.1f}",
-        textposition="outside"
-    )
-
-    st.plotly_chart(fig3, use_container_width=True)
+    with c3:
+        st.subheader("3. Depressão x Estresse")
+    
+        df_amostra_3 = obter_amostra_100(df_filtrado)
+    
+        df_g3 = (
+            df_amostra_3
+            .groupby("Depression")["nivel_estresse"]
+            .mean()
+            .reset_index()
+        )
+    
+        fig3 = px.bar(
+            df_g3,
+            x="Depression",
+            y="nivel_estresse",
+            color="Depression",
+            text="nivel_estresse",
+            color_discrete_sequence=CORES_ALTO_CONTRASTE,
+            labels={
+                "Depression": "Sintomas Depressivos",
+                "nivel_estresse": "Nível Médio de Estresse"
+            }
+        )
+    
+        fig3.update_traces(
+            texttemplate="%{text:.1f}",
+            textposition="outside"
+        )
+    
+        st.plotly_chart(fig3, use_container_width=True)
 
         with c4:
             st.subheader("4. Atividade Física x Estresse")
