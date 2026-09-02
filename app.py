@@ -256,75 +256,74 @@ try:
             )
             st.plotly_chart(fig6, use_container_width=True)
 
-    st.subheader("7. Distribuição do Estresse por Depressão")
-        
-            # Use all filtered students
-            df_amostra_3 = df_filtrado.copy()
-        
-            # Create stress categories
-            df_amostra_3["Grupo_Estresse"] = pd.cut(
-                df_amostra_3["nivel_estresse"],
-                bins=[0, 3, 6, 10],
-                labels=[
-                    "Baixo (1–3)",
-                    "Moderado (4–6)",
-                    "Alto (7–10)"
-                ],
-                include_lowest=True
+            # --- QUARTA LINHA DE GRÁFICOS (7) ---
+        st.divider()
+
+        st.subheader("7. Distribuição do Estresse por Depressão")
+
+        # Usa todos os estudantes após os filtros
+        df_amostra_7 = df_filtrado.copy()
+
+        # Cria categorias de estresse
+        df_amostra_7["Grupo_Estresse"] = pd.cut(
+            df_amostra_7["nivel_estresse"],
+            bins=[0, 3, 6, 10],
+            labels=[
+                "Baixo (1–3)",
+                "Moderado (4–6)",
+                "Alto (7–10)"
+            ],
+            include_lowest=True
+        )
+
+        # Cria duas colunas para os gráficos de pizza
+        pie1, pie2 = st.columns(2)
+
+        # PIE 1 — COM DEPRESSÃO
+        with pie1:
+            df_sim = (
+                df_amostra_7[df_amostra_7["Depression"] == "Sim"]
+                .groupby("Grupo_Estresse", observed=False)
+                .size()
+                .reset_index(name="Quantidade")
             )
-        
-            # Create two columns for the pie charts
-            pie1, pie2 = st.columns(2)
-        
-            # -----------------------------
-            # PIE 1 — DEPRESSION = SIM
-            # -----------------------------
-            with pie1:
-                df_sim = (
-                    df_amostra_3[df_amostra_3["Depression"] == "Sim"]
-                    .groupby("Grupo_Estresse", observed=False)
-                    .size()
-                    .reset_index(name="Quantidade")
-                )
-        
-                fig_sim = px.pie(
-                    df_sim,
-                    names="Grupo_Estresse",
-                    values="Quantidade",
-                    title="Com Depressão",
-                    color_discrete_sequence=CORES_ALTO_CONTRASTE
-                )
-        
-                fig_sim.update_traces(
-                    textinfo="percent+label"
-                )
-        
-                st.plotly_chart(fig_sim, use_container_width=True)
-        
-            # -----------------------------
-            # PIE 2 — DEPRESSION = NÃO
-            # -----------------------------
-            with pie2:
-                df_nao = (
-                    df_amostra_3[df_amostra_3["Depression"] == "Não"]
-                    .groupby("Grupo_Estresse", observed=False)
-                    .size()
-                    .reset_index(name="Quantidade")
-                )
-        
-                fig_nao = px.pie(
-                    df_nao,
-                    names="Grupo_Estresse",
-                    values="Quantidade",
-                    title="Sem Depressão",
-                    color_discrete_sequence=CORES_ALTO_CONTRASTE
-                )
-        
-                fig_nao.update_traces(
-                    textinfo="percent+label"
-                )
-        
-                st.plotly_chart(fig_nao, use_container_width=True)
+
+            fig_sim = px.pie(
+                df_sim,
+                names="Grupo_Estresse",
+                values="Quantidade",
+                title="Com Depressão",
+                color_discrete_sequence=CORES_ALTO_CONTRASTE
+            )
+
+            fig_sim.update_traces(
+                textinfo="percent+label"
+            )
+
+            st.plotly_chart(fig_sim, use_container_width=True)
+
+        # PIE 2 — SEM DEPRESSÃO
+        with pie2:
+            df_nao = (
+                df_amostra_7[df_amostra_7["Depression"] == "Não"]
+                .groupby("Grupo_Estresse", observed=False)
+                .size()
+                .reset_index(name="Quantidade")
+            )
+
+            fig_nao = px.pie(
+                df_nao,
+                names="Grupo_Estresse",
+                values="Quantidade",
+                title="Sem Depressão",
+                color_discrete_sequence=CORES_ALTO_CONTRASTE
+            )
+
+            fig_nao.update_traces(
+                textinfo="percent+label"
+            )
+
+            st.plotly_chart(fig_nao, use_container_width=True)
 
     else:
         st.warning("Nenhum dado encontrado para os filtros selecionados. Ajuste os filtros na barra lateral.")
