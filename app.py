@@ -187,9 +187,9 @@ try:
                 textposition="outside"
             )
         
-            # Configura o eixo Y de 0 até 100.000, com linhas a cada 10.000
+            # Configura o eixo Y de 0 até 70.000, com linhas a cada 10.000
             fig3.update_yaxes(
-                range=[0, 100000],
+                range=[0, 70000],
                 dtick=10000,
                 tickformat=","
             )
