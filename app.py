@@ -74,8 +74,6 @@ with col2:
 	
 c3, c4 = st.columns(2)
 
-c3, c4 = st.columns(2)
-
 with c3:
     st.subheader("Nível de Estresse x Depressão")
 
