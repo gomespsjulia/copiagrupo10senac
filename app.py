@@ -88,28 +88,35 @@ with col2:
 	
 c3, c4 = st.columns(2)
 
+c3, c4 = st.columns(2)
+
 with c3:
     st.subheader("3. Nível de Estresse x Depressão")
-        
-    # Usa todos os estudantes após os filtros
+
     df_amostra_3 = df.copy()
-        
-    # Cria grupos de nível de estresse
+
+    # Cria os grupos de estresse
     df_amostra_3["Grupo_Estresse"] = pd.cut(
         df_amostra_3["nivel_estresse"],
         bins=[0, 3, 6, 10],
         labels=["Baixo (1–3)", "Moderado (4–6)", "Alto (7–10)"],
         include_lowest=True
     )
-        
-    # Conta estudantes por nível de estresse e depressão
+
+    # Conta estudantes por estresse e depressão
     df_g3 = (
         df_amostra_3
         .groupby(["Grupo_Estresse", "Depression"], observed=False)
         .size()
         .reset_index(name="Quantidade")
     )
-        
+
+    # Renomeia True/False para o gráfico
+    df_g3["Depression"] = df_g3["Depression"].replace({
+        True: "Com depressão",
+        False: "Sem depressão"
+    })
+
     fig3 = px.bar(
         df_g3,
         x="Grupo_Estresse",
@@ -117,27 +124,24 @@ with c3:
         color="Depression",
         barmode="group",
         text="Quantidade",
-        color_discrete_sequence=CORES_ALTO_CONTRASTE,
         labels={
             "Grupo_Estresse": "Nível de Estresse",
             "Quantidade": "Quantidade de Estudantes",
-            "Depression": "Sintomas Depressivos"
+            "Depression": "Depressão"
         }
     )
-        
-    # Formata os números nas barras
+
     fig3.update_traces(
         texttemplate="%{text:,.0f}",
         textposition="outside"
     )
-        
-    # Configura o eixo Y de 0 até 70.000, com linhas a cada 10.000
+
     fig3.update_yaxes(
         range=[0, 70000],
         dtick=10000,
         tickformat=","
     )
-        
+
     st.plotly_chart(fig3, use_container_width=True)
 # ==========================================
 # GRÁFICO 4 - RICHARD
