@@ -256,8 +256,7 @@ try:
             )
             st.plotly_chart(fig6, use_container_width=True)
 
-        with c7:
-            st.subheader("7. Distribuição do Estresse por Depressão")
+    st.subheader("7. Distribuição do Estresse por Depressão")
         
             # Use all filtered students
             df_amostra_3 = df_filtrado.copy()
