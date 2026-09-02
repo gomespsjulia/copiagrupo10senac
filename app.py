@@ -147,10 +147,10 @@ try:
         with c3:
             st.subheader("3. Nível de Estresse x Depressão")
         
-            # Use todos os estudantes após os filtros
+            # Usa todos os estudantes após os filtros
             df_amostra_3 = df_filtrado.copy()
         
-            # Cria as categorias de estresse
+            # Cria grupos de nível de estresse
             df_amostra_3["Grupo_Estresse"] = pd.cut(
                 df_amostra_3["nivel_estresse"],
                 bins=[0, 3, 6, 10],
@@ -158,7 +158,7 @@ try:
                 include_lowest=True
             )
         
-            # Conta os estudantes por grupo
+            # Conta estudantes por nível de estresse e depressão
             df_g3 = (
                 df_amostra_3
                 .groupby(["Grupo_Estresse", "Depression"], observed=False)
@@ -166,35 +166,32 @@ try:
                 .reset_index(name="Quantidade")
             )
         
-            # Converte para estudantes por 10.000
-            total_estudantes = len(df_amostra_3)
-        
-            df_g3["Por_10k"] = (
-                df_g3["Quantidade"] / total_estudantes * 10000
-            )
-        
             fig3 = px.bar(
                 df_g3,
                 x="Grupo_Estresse",
-                y="Por_10k",
+                y="Quantidade",
                 color="Depression",
                 barmode="group",
-                text="Por_10k",
+                text="Quantidade",
                 color_discrete_sequence=CORES_ALTO_CONTRASTE,
                 labels={
                     "Grupo_Estresse": "Nível de Estresse",
-                    "Por_10k": "Estudantes por 10.000",
-                    "Depression": "Depressão"
+                    "Quantidade": "Quantidade de Estudantes",
+                    "Depression": "Sintomas Depressivos"
                 }
             )
         
+            # Formata os números nas barras
             fig3.update_traces(
-                texttemplate="%{text:.0f}",
+                texttemplate="%{text:,.0f}",
                 textposition="outside"
             )
         
-            fig3.update_layout(
-                yaxis_title="Estudantes por 10.000"
+            # Configura o eixo Y de 0 até 100.000, com linhas a cada 10.000
+            fig3.update_yaxes(
+                range=[0, 100000],
+                dtick=10000,
+                tickformat=","
             )
         
             st.plotly_chart(fig3, use_container_width=True)
