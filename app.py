@@ -124,6 +124,10 @@ with c3:
         color="Depression",
         barmode="group",
         text="Quantidade",
+		color_discrete_map={
+            "Sem depressão": "#ff7f0e",
+            "Com depressão": "#1f77b4"
+        },
         labels={
             "Grupo_Estresse": "Nível de Estresse",
             "Quantidade": "Quantidade de Estudantes",
